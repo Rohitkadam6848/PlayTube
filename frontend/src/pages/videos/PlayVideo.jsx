@@ -495,35 +495,46 @@ function PlayVideo() {
               {loading1 ? <ClipLoader size={20} color="black" /> : " Post"}
             </button>
           </div>
-          <div className="space-y-3 ">
+
+          <div className="space-y-4">
             {comment?.map((comment) => (
-              <div
-                className="p-3 bg-[#1a1a1a] rounded-lg shadow-sm text-sm"
-                key={comment?._id}
-              >
-                <div className="flex items-center justify-start gap-1">
+              <div className="p-4 bg-[#1a1a1a] rounded-lg" key={comment?._id}>
+                {/* Comment Header */}
+                <div className="flex items-center gap-3">
                   <img
                     src={comment?.author?.photoUrl}
-                    className="w-8 h-8 rounded-full object-cover "
+                    className="w-9 h-9 rounded-full object-cover"
                   />
-                  <h2 className="text-[13px]">
+                  <h2 className="text-sm font-semibold">
                     @{comment?.author?.username.toLowerCase()}
                   </h2>
                 </div>
-                <p className="font-medium px-5 py-5">{comment?.message}</p>
-                <div className="ml-4 mt-2 space-y-2 ">
+
+                {/* Comment Message */}
+                <p className="text-sm mt-2 ml-12 text-gray-300">
+                  {comment?.message}
+                </p>
+
+                {/* Replies */}
+                <div className="ml-12 mt-3 space-y-2">
                   {comment?.replies.map((reply) => (
-                    <div className="p-2 bg-[#2a2a2a] rounded" key={reply?._id}>
-                      <div className="flex  gap-1">
+                    <div
+                      className="p-2 bg-[#2a2a2a] rounded-md"
+                      key={reply?._id}
+                    >
+                      <div className="flex items-center gap-2">
                         <img
                           src={reply?.author?.photoUrl}
                           className="w-6 h-6 rounded-full object-cover"
                         />
-                        <h2 className="text-[13px]">
+                        <h2 className="text-xs font-semibold">
                           @{reply?.author?.username.toLowerCase()}
                         </h2>
-                        <p className="px-5 py-5">{reply?.message}</p>
                       </div>
+
+                      <p className="text-xs text-gray-300 ml-8 mt-1">
+                        {reply?.message}
+                      </p>
                     </div>
                   ))}
                 </div>
