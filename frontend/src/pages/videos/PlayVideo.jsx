@@ -282,7 +282,7 @@ function PlayVideo() {
         { message: newComment },
         { withCredentials: true },
       );
-      setComment(result.data?.comments);
+      setComment((prev) => [result.data?.comments.slice(-1)[0], ...prev]);
       console.log(result.data?.comments);
       setLoading1(false);
       setNewComment("");
@@ -496,7 +496,7 @@ function PlayVideo() {
             </button>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3 max-h-75 overflow-y-auto pr-2 ">
             {comment?.map((comment) => (
               <div className="p-4 bg-[#1a1a1a] rounded-lg" key={comment?._id}>
                 {/* Comment Header */}
@@ -539,7 +539,11 @@ function PlayVideo() {
                   ))}
                 </div>
 
-                <ReplySection comment={comment} handleReply={handleReply} />
+                <ReplySection
+                  comment={comment}
+                  handleReply={handleReply}
+                  loading2={loading2}
+                />
               </div>
             ))}
           </div>
@@ -598,7 +602,7 @@ function PlayVideo() {
   );
 }
 
-const ReplySection = ({ comment, handleReply }) => {
+const ReplySection = ({ comment, handleReply, loading2 }) => {
   const [replyText, setReplyText] = useState("");
   const [showReplyInput, setShowReplyInput] = useState(false);
   return (
@@ -620,7 +624,7 @@ const ReplySection = ({ comment, handleReply }) => {
             }}
             className="bg-orange-600 hover:bg-orange-700 text-white px-3 rounded-lg text-sm"
           >
-            Reply
+            {loading2 ? <ClipLoader size={20} color="black" /> : " Reply"}
           </button>
         </div>
       )}
