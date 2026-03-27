@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import Description from "./../../components/Description";
 import {
   FaPlay,
   FaPause,
@@ -91,8 +92,35 @@ function Shorts() {
               </div>
             )}
 
-            <div className="absolute bottom-0 left-0 right-0 p-4 bg-liner-to-t from-black/80 via-black/40 to-transparent text-white space-y-2">
-              <div></div>
+            <div className="absolute bottom-0 left-0 right-0 p-4 bg-liner-to-t from-black/80 via-black/40 to-transparent text-white space-y-1">
+              <div className="flex items-center justify-start gap-2">
+                <img
+                  src={short?.channel?.avatar}
+                  className="w-8 h-8 rounded-full border"
+                />
+                <span className="text-sm text-gray-300 ">
+                  @{short?.channel?.name.toLowerCase()}
+                </span>
+                <button className="bg-white text-black text-xs px-2.5 py-2.5 rounded-full cursor-pointer">
+                  Subscribe
+                </button>
+              </div>
+              <div className="flex items-center justify-start">
+                <h3 className="font-bold text-lg line-clamp-2">
+                  {short?.title}
+                </h3>
+              </div>
+              <div>
+                {short?.tags.map((tag, idx) => (
+                  <span
+                    key={idx}
+                    className="bg-gray-800 text-gray-200 text-xs px-2 py-1  rounded-full"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <Description text={short?.description} />
             </div>
           </div>
         </div>
