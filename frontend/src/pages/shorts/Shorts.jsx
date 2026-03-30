@@ -120,7 +120,7 @@ function Shorts() {
                   </span>
                 ))}
               </div>
-              <Description text={short?.description} />
+              <Description text={short?.description  } />
             </div>
           </div>
         </div>
