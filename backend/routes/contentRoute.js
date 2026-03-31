@@ -11,7 +11,16 @@ import {
   toggleLikes,
   toggleSave,
 } from "../controllers/videoController.js";
-import { createShort, getAllShorts } from "../controllers/shortController.js";
+import {
+  addComment1,
+  addReply1,
+  createShort,
+  getAllShorts,
+  getViews1,
+  toggleDislikes1,
+  toggleLikes1,
+  toggleSave1,
+} from "../controllers/shortController.js";
 
 const contentRouter = Router();
 
@@ -40,6 +49,13 @@ contentRouter.post(
   upload.single("shortUrl"),
   createShort,
 );
+
+contentRouter.put("/short/:shortId/toggle-like", isAuth, toggleLikes1);
+contentRouter.put("/short/:shortId/toggle-dislike", isAuth, toggleDislikes1);
+contentRouter.put("/short/:shortId/toggle-save", isAuth, toggleSave1);
+contentRouter.put("/short/:shortId/add-view", getViews1);
+contentRouter.post("/short/:shortId/add-comment", isAuth, addComment1);
+contentRouter.post("/short/:shortId/:commentId/add-reply", isAuth, addReply1);
 
 contentRouter.get("/getallvideos", isAuth, getAllVideos);
 contentRouter.get("/getallshorts", isAuth, getAllShorts);

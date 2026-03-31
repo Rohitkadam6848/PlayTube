@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import Description from "./../../components/Description";
+import axios from "axios";
+import { serverUrl } from "./../../App";
+
 import {
   FaPlay,
   FaPause,
@@ -11,6 +14,7 @@ import {
   FaThumbsUp,
   FaThumbsDown,
 } from "react-icons/fa";
+import { ClipLoader } from "react-spinners";
 
 const IconButtton = ({ icon: Icon, active, label, count, onClick }) => {
   return (
@@ -38,6 +42,7 @@ function Shorts() {
   const [playIndex, setPlayIndex] = useState(null);
   const { userData } = useSelector((state) => state.user);
   const [openComment, SetOpenComment] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!allShortsData || allShortsData.length === 0) {
@@ -84,6 +89,53 @@ function Shorts() {
       }
     }
   };
+
+  const handelSubscribe = async (channelId) => {
+    setLoading(true);
+    try {
+      const result = await axios.post(
+        serverUrl + "/api/user/togglesubscribe",
+        { channelId },
+        { withCredentials: true },
+      );
+
+      setLoading(false);
+      console.log(result.data);
+
+      const updatedChannel = result.data;
+      setShortList((prev) =>
+        prev.map((short) =>
+          short?.channel?._id === channelId
+            ? { ...short, channel: updatedChannel }
+            : short,
+        ),
+      );
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+
+  const toggleLikes = async (shortId) => {
+    try {
+      const result = await axios.put(
+        `${serverUrl}/api/content/short/${shortId}/toggle-like`,
+        {},
+        { withCredentials: true },
+      );
+
+      const updatedShort = result.data;
+      setShortList((prev) =>
+        prev.map((short) =>
+          short?._id === updatedShort._id ? updatedShort : short,
+        ),
+      );
+      console.log(result.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="h-screen w-full overflow-y-scroll snap-y snap-mandatory ">
       {shortList?.map((short, idx) => (
@@ -122,10 +174,20 @@ function Shorts() {
                   className="w-8 h-8 rounded-full border"
                 />
                 <span className="text-sm text-gray-300 ">
-                  @{short?.channel?.name.toLowerCase()}
+                  @{short?.channel?.name?.toLowerCase()}
                 </span>
-                <button className="bg-white text-black text-xs px-2.5 py-2.5 rounded-full cursor-pointer">
-                  Subscribe
+                <button
+                  disabled={loading}
+                  onClick={() => handelSubscribe(short?.channel?._id)}
+                  className={`${short?.channel?.subscribers?.includes(userData?._id) ? "bg-[#000000a1] text-white border border-gray-700 " : "bg-white text-black"} text-xs px-2.5 py-2.5 rounded-full cursor-pointer`}
+                >
+                  {loading ? (
+                    <ClipLoader size={20} color="gray" />
+                  ) : short?.channel?.subscribers?.includes(userData?._id) ? (
+                    "Subscribed"
+                  ) : (
+                    "Subscribe"
+                  )}
                 </button>
               </div>
               <div className="flex items-center justify-start">
@@ -151,6 +213,7 @@ function Shorts() {
                 label={"Likes"}
                 active={short?.likes?.includes(userData._id)}
                 count={short?.likes?.length}
+                onClick={() => toggleLikes(short._id)}
               />
               <IconButtton
                 icon={FaThumbsDown}
@@ -188,6 +251,16 @@ function Shorts() {
                       size={20}
                       onClick={() => SetOpenComment(!openComment)}
                     />
+                  </button>
+                </div>
+                <div className="mt-4 flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Add a Comment..."
+                    className="flex-1 bg-gray-900 text-white p-2 rounded"
+                  />
+                  <button className="bg-black px-4 py-2 border border-gray-700 rounded-xl">
+                    Post
                   </button>
                 </div>
               </div>
