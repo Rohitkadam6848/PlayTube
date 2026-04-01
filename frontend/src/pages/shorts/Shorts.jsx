@@ -136,6 +136,46 @@ function Shorts() {
     }
   };
 
+  const toggleDislikes = async (shortId) => {
+    try {
+      const result = await axios.put(
+        `${serverUrl}/api/content/short/${shortId}/toggle-dislike`,
+        {},
+        { withCredentials: true },
+      );
+
+      const updatedShort = result.data;
+      setShortList((prev) =>
+        prev.map((short) =>
+          short?._id === updatedShort._id ? updatedShort : short,
+        ),
+      );
+      console.log(result.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const toggleSave = async (shortId) => {
+    try {
+      const result = await axios.put(
+        `${serverUrl}/api/content/short/${shortId}/toggle-save`,
+        {},
+        { withCredentials: true },
+      );
+
+      const updatedShort = result.data;
+      setShortList((prev) =>
+        prev.map((short) =>
+          short?._id === updatedShort._id ? updatedShort : short,
+        ),
+      );
+      console.log(result.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="h-screen w-full overflow-y-scroll snap-y snap-mandatory ">
       {shortList?.map((short, idx) => (
@@ -220,6 +260,7 @@ function Shorts() {
                 label={"Dislikes"}
                 active={short?.disLikes?.includes(userData._id)}
                 count={short?.disLikes?.length}
+                onClick={() => toggleDislikes(short._id)}
               />
               <IconButtton
                 icon={FaComment}
@@ -240,6 +281,7 @@ function Shorts() {
                 icon={FaBookmark}
                 label={"Save"}
                 active={short?.saveBy?.includes(userData._id)}
+                onClick={() => toggleSave(short._id)}
               />
             </div>
             {openComment && (

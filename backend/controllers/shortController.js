@@ -172,18 +172,10 @@ export const addComment1 = async (req, res) => {
     short.comments.push({ author: userId, message });
 
     await short.save();
-
-    const populatedShort = await Short.findById(shortId)
-      .populate({
-        path: "comments.author",
-        select: "username photourl email",
-      })
-      .populate({
-        path: "comments.replies.author",
-        select: "username photourl email ",
-      });
-
-    return res.status(200).json(populatedShort);
+    await short.populate("comments.author", "username photoUrl");
+    await short.populate("channel");
+    await short.populate("comments.replies.author", "username photoUrl");
+    return res.status(200).json(short);
   } catch (error) {
     return res.status(500).json({ message: `Failed to add comment ${error}` });
   }
@@ -215,17 +207,9 @@ export const addReply1 = async (req, res) => {
     });
 
     await short.save();
-
-    await short.populate([
-      {
-        path: "comments.author",
-        select: "username photourl email",
-      },
-      {
-        path: "comments.replies.author",
-        select: "username photourl email",
-      },
-    ]);
+    await short.populate("comments.author", "username photoUrl");
+    await short.populate("channel");
+    await short.populate("comments.replies.author", "username photoUrl");
 
     return res.status(200).json(short);
   } catch (error) {
