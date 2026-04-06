@@ -34,7 +34,7 @@ const IconButtton = ({ icon: Icon, active, label, count, onClick }) => {
   );
 };
 
-function Shorts() {
+function PlayShort() {
   const { allShortsData } = useSelector((state) => state.content);
   const [shortList, setShortList] = useState([]);
   const shortRef = useRef([]);
@@ -511,4 +511,4 @@ function Shorts() {
   );
 }
 
-export default Shorts;
+export default PlayShort;
