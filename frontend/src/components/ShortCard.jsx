@@ -25,7 +25,7 @@ function ShortCard({ shortUrl, title, channelName, avatar, views, id }) {
           />
           <p className="text-xs text-gray-400 ">{channelName}</p>
         </div>
-        <p className="text-xs text-gray-400">{views}</p>
+        <p className="text-xs text-gray-400">{views} views</p>
       </div>
     </div>
   );

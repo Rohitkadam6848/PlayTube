@@ -52,7 +52,7 @@ export const getAllShorts = async (req, res) => {
   try {
     const shorts = await Short.find()
       .sort({ createdAt: -1 })
-      .populate("channel");
+      .populate("channel comments.author comments.replies.author");
     if (!shorts) {
       return res.status(400).json({ message: `Shorts are not found` });
     }
@@ -79,7 +79,9 @@ export const toggleLikes1 = async (req, res) => {
       short.disLikes.pull(userId);
     }
 
+    await short.populate("comments.author", "username photoUrl");
     await short.populate("channel");
+    await short.populate("comments.replies.author", "username photoUrl");
     await short.save();
     return res.status(200).json(short);
   } catch (error) {
@@ -103,7 +105,9 @@ export const toggleDislikes1 = async (req, res) => {
       short.disLikes.push(userId);
       short.likes.pull(userId);
     }
+    await short.populate("comments.author", "username photoUrl");
     await short.populate("channel");
+    await short.populate("comments.replies.author", "username photoUrl");
     await short.save();
     return res.status(200).json(short);
   } catch (error) {
@@ -126,7 +130,10 @@ export const toggleSave1 = async (req, res) => {
     } else {
       short.saveBy.push(userId);
     }
+
+    await short.populate("comments.author", "username photoUrl");
     await short.populate("channel");
+    await short.populate("comments.replies.author", "username photoUrl");
     await short.save();
     return res.status(200).json(short);
   } catch (error) {
@@ -148,8 +155,11 @@ export const getViews1 = async (req, res) => {
     if (!short) {
       return res.status(400).json({ message: "short is not found" });
     }
-    await short.populate("channel");
 
+    await short.populate("comments.author", "username photoUrl");
+    await short.populate("channel");
+    await short.populate("comments.replies.author", "username photoUrl");
+    await short.save();
     return res.status(200).json(short);
   } catch (error) {
     return res
