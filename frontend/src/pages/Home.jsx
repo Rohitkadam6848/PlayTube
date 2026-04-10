@@ -235,7 +235,9 @@ function Home() {
           icon={<SiYoutubeshorts />}
           text={"Shorts"}
           active={active === "Shorts"}
-          onClick={() => setActive("Shorts")}
+          onClick={() => {
+            (setActive("Shorts"), navigate("/shorts"));
+          }}
         />
 
         <MobileSizeNav

@@ -46,7 +46,6 @@ function Shorts() {
   const [viewedShort, setViewedShort] = useState([]);
   const [comments, setComments] = useState({});
   const [newComment, setNewComment] = useState("");
-  // FIX 3: Track open reply box per comment ID, not a single global boolean
   const [openReplyId, setOpenReplyId] = useState(null);
   const [replyText, setReplyText] = useState({});
 
@@ -259,7 +258,7 @@ function Shorts() {
     <div className="h-screen w-full overflow-y-scroll snap-y snap-mandatory">
       {shortList?.map((short, idx) => (
         <div
-          className="min-h-screen w-full flex md:items-center items-start justify-center snap-start relative pt-10 md:pt-0"
+          className="min-h-screen w-full flex md:items-center items-start mt-12.5 md:mt-0 justify-center snap-start relative pt-10 md:pt-0"
           key={short?._id}
         >
           <div

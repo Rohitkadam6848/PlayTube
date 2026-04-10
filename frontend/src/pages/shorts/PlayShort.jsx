@@ -15,6 +15,7 @@ import {
   FaThumbsDown,
 } from "react-icons/fa";
 import { ClipLoader } from "react-spinners";
+import { useParams } from "react-router-dom";
 
 const IconButtton = ({ icon: Icon, active, label, count, onClick }) => {
   return (
@@ -36,6 +37,8 @@ const IconButtton = ({ icon: Icon, active, label, count, onClick }) => {
 
 function PlayShort() {
   const { allShortsData } = useSelector((state) => state.content);
+  const { shortId } = useParams();
+  const selectedShort = allShortsData?.find((s) => s._id === shortId);
   const [shortList, setShortList] = useState([]);
   const shortRef = useRef([]);
   const [playIndex, setPlayIndex] = useState(null);
@@ -46,15 +49,30 @@ function PlayShort() {
   const [viewedShort, setViewedShort] = useState([]);
   const [comments, setComments] = useState({});
   const [newComment, setNewComment] = useState("");
-  // FIX 3: Track open reply box per comment ID, not a single global boolean
   const [openReplyId, setOpenReplyId] = useState(null);
   const [replyText, setReplyText] = useState({});
 
   useEffect(() => {
     if (!allShortsData || allShortsData.length === 0) return;
-    const shuffled = [...allShortsData].sort(() => Math.random() - 0.5);
-    setShortList(shuffled);
-  }, [allShortsData]);
+
+    if (selectedShort) {
+      const selected = allShortsData.find(
+        (short) => short._id === selectedShort._id,
+      );
+
+      const remaining = allShortsData.filter(
+        (short) => short._id !== selectedShort._id,
+      );
+
+      if (selected) {
+        setShortList([selected, ...remaining]);
+      } else {
+        setShortList(allShortsData);
+      }
+    } else {
+      setShortList(allShortsData);
+    }
+  }, [allShortsData, allShortsData]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
