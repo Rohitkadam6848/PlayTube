@@ -21,6 +21,17 @@ import {
   toggleLikes1,
   toggleSave1,
 } from "../controllers/shortController.js";
+import {
+  createPlaylist,
+  toggleSavePlaylist,
+} from "../controllers/playListController.js";
+import {
+  addCommentForPost,
+  addReplyForPost,
+  createPost,
+  getAllPosts,
+  toggleLikesForPost,
+} from "../controllers/postController.js";
 
 const contentRouter = Router();
 
@@ -59,5 +70,16 @@ contentRouter.post("/short/:shortId/:commentId/add-reply", isAuth, addReply1);
 
 contentRouter.get("/getallvideos", isAuth, getAllVideos);
 contentRouter.get("/getallshorts", isAuth, getAllShorts);
+
+//Palylist
+contentRouter.post("/create-playlist", isAuth, createPlaylist);
+contentRouter.post("playlist/toggle-save", isAuth, toggleSavePlaylist);
+
+//post
+contentRouter.post("/create-post", isAuth, upload.single("image"), createPost);
+contentRouter.get("/getPosts", getAllPosts);
+contentRouter.post("post/toogle-like", isAuth, toggleLikesForPost);
+contentRouter.post("post/add-commeent", isAuth, addCommentForPost);
+contentRouter.post("post/add-addReply", isAuth, addReplyForPost);
 
 export default contentRouter;
