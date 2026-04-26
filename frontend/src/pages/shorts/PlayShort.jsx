@@ -277,11 +277,11 @@ function PlayShort() {
     <div className="h-screen w-full overflow-y-scroll snap-y snap-mandatory">
       {shortList?.map((short, idx) => (
         <div
-          className="min-h-screen w-full flex md:items-center items-start justify-center snap-start relative pt-10 md:pt-0"
+          className="min-h-screen w-full flex md:items-center items-start justify-center snap-start relative pt-0 md:pt-0"
           key={short?._id}
         >
           <div
-            className="relative w-105 md:w-87.5 aspect-9/16 bg-black rounded-2xl overflow-hidden shadow-xl border border-gray-700 cursor-pointer"
+            className="relative w-full h-screen md:h-auto md:w-87.5 aspect-9/16 bg-black md:rounded-2xl md:mt-0 overflow-hidden shadow-xl border border-gray-700"
             onClick={() => togglePlay(idx)}
           >
             <video
@@ -349,7 +349,7 @@ function PlayShort() {
               <Description text={short?.description} />
             </div>
 
-            <div className="absolute right-3 bottom-28 flex flex-col items-center gap-5">
+            <div className="absolute right-2 bottom-24 md:bottom-28 flex flex-col items-center gap-4">
               <IconButtton
                 icon={FaThumbsUp}
                 label={"Likes"}

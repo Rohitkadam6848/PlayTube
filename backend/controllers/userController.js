@@ -170,3 +170,22 @@ export const toggleSubscribe = async (req, res) => {
       .json({ message: `Faild to toogel subscribe ${error}` });
   }
 };
+
+export const getAllChannelData = async (req, res) => {
+  try {
+    const channels = await Channel.find()
+      .populate("owner")
+      .populate("videos")
+      .populate("shorts");
+
+    if (!channels) {
+      return res.status(400).json({ message: "Channels are not found" });
+    }
+
+    return res.status(200).json(channels);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: `failed to getAll channels ${error}` });
+  }
+};
