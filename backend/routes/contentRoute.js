@@ -73,7 +73,7 @@ contentRouter.get("/getallshorts", isAuth, getAllShorts);
 
 //Palylist
 contentRouter.post("/create-playlist", isAuth, createPlaylist);
-contentRouter.post("playlist/toggle-save", isAuth, toggleSavePlaylist);
+contentRouter.post("/playlist/toggle-save", isAuth, toggleSavePlaylist);
 
 //post
 contentRouter.post("/create-post", isAuth, upload.single("image"), createPost);
