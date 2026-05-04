@@ -7,7 +7,7 @@ export const createPost = async (req, res) => {
     const { channelId, content } = req.body;
     const file = req.file;
 
-    if (!channelId || content) {
+    if (!channelId || !content) {
       return res
         .status(400)
         .json({ message: "channelId and content is required" });
@@ -24,8 +24,7 @@ export const createPost = async (req, res) => {
       image: imageUrl,
     });
 
-    await Channel.findByIdAndUpdate({
-      channelId,
+    await Channel.findByIdAndUpdate(channelId, {
       $push: { communityPosts: post._id },
     });
 
@@ -46,7 +45,9 @@ export const getAllPosts = async (req, res) => {
 
     return res.status(200).json(posts);
   } catch (error) {
-    return res.status(500).json({ message: `Failed to get posts${error}` });
+    return res.status(500).json({
+      message: `Failed to create post: ${error.message}`,
+    });
   }
 };
 

@@ -6,14 +6,13 @@ const replySchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+
     message: {
       type: String,
       required: true,
     },
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date },
   },
-  { _id: true },
+  { timestamps: true },
 );
 
 const commentSchema = new Schema(
@@ -22,15 +21,15 @@ const commentSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+
     message: {
       type: String,
       required: true,
     },
-    replies: { replySchema },
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date },
+
+    replies: [replySchema], // FIXED
   },
-  { _id: true },
+  { timestamps: true },
 );
 
 const postSchema = new Schema(
@@ -40,15 +39,24 @@ const postSchema = new Schema(
       ref: "Channel",
       required: true,
     },
+
     content: {
       type: String,
       required: true,
     },
+
     image: {
       type: String,
     },
-    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    comments: { commentSchema },
+
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+
+    comments: [commentSchema], // FIXED
   },
   { timestamps: true },
 );

@@ -78,8 +78,8 @@ contentRouter.post("/playlist/toggle-save", isAuth, toggleSavePlaylist);
 //post
 contentRouter.post("/create-post", isAuth, upload.single("image"), createPost);
 contentRouter.get("/getPosts", getAllPosts);
-contentRouter.post("post/toogle-like", isAuth, toggleLikesForPost);
-contentRouter.post("post/add-commeent", isAuth, addCommentForPost);
-contentRouter.post("post/add-addReply", isAuth, addReplyForPost);
+contentRouter.post("/post/toogle-like", isAuth, toggleLikesForPost);
+contentRouter.post("/post/add-commeent", isAuth, addCommentForPost);
+contentRouter.post("/post/add-addReply", isAuth, addReplyForPost);
 
 export default contentRouter;

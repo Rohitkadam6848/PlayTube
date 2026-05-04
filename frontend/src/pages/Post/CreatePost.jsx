@@ -1,13 +1,20 @@
 import React, { useState } from "react";
 import { FaImage } from "react-icons/fa";
 import { showCustomAlert } from "../../components/CustomAlert";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { serverUrl } from "./../../App";
+import { useNavigate } from "react-router-dom";
+import { setChannelData } from "../../redux/userSlice";
+import { ClipLoader } from "react-spinners";
 
 function CreatePost() {
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const { channelData } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handelCreatePost = async () => {
     if (!content) {
@@ -16,9 +23,33 @@ function CreatePost() {
     }
 
     const formData = new FormData();
-    formData.append();
+    formData.append("channelId", channelData._id);
+    formData.append("content", content);
+    if (image) formData.append("image", image);
+    setLoading(true);
+
     try {
-    } catch (error) {}
+      const result = await axios.post(
+        serverUrl + "/api/content/create-post",
+        formData,
+        { withCredentials: true },
+      );
+      const updatedChannel = {
+        ...channelData,
+        posts: [...(channelData.posts || []), result.data],
+      };
+
+      dispatch(setChannelData(updatedChannel));
+
+      showCustomAlert("Post created successfully");
+      setLoading(false);
+
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+      showCustomAlert("Falid to create Post");
+    }
   };
   return (
     <div className="w-full min-h-[80vh] bg-[#0f0f0f] text-white flex flex-col pt-20px items-center justify-center">
@@ -27,7 +58,7 @@ function CreatePost() {
           onChange={(e) => setContent(e.target.value)}
           value={content}
           placeholder="Write something for your community..."
-          className="w-full p-3 roudned-lg bg-[#121212] border border-gray-700 text-white focus:ring-2 focus:ring-orange-500 focus:outline-none h-28"
+          className="w-full p-3 rounded-lg bg-[#121212] border border-gray-700 text-white focus:ring-2 focus:ring-orange-500 focus:outline-none h-28"
         />
 
         <label
@@ -37,7 +68,7 @@ function CreatePost() {
           <FaImage className="text-2xl items-center space-x-3 cursor-pointer" />
           <span className="text-gray-200">Add Image (optional)</span>
           <input
-            onClick={(e) => setImage(e.target.files[0])}
+            onChange={(e) => setImage(e.target.files[0])}
             type="file"
             className="hidden"
             id="image"
@@ -57,8 +88,9 @@ function CreatePost() {
         <button
           disabled={!content}
           className="w-full bg-orange-600 hover:bg-orange-700 py-3 rounded-lg font-medium disabled:bg-gray-700 flex items-center justify-center"
+          onClick={handelCreatePost}
         >
-          Create Post
+          {loading ? <ClipLoader size={20} color="black" /> : "Create Post"}
         </button>
       </div>
     </div>
